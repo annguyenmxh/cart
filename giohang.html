@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>Javascript-Cart</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(135deg,
+                #ecd252,
+                #d161ff);
+    }
+
+    .container {
+        width: 1200px;
+        margin: 0 auto;
+    }
+
+    .product-items {
+        display: flex;
+        justify-content: space-between;
+        background-color: #ddd;
+        padding: 12px;
+    }
+
+    .product-item {
+        width: 19%;
+        background-color: #ffff;
+        padding: 12px;
+        text-align: center;
+    }
+
+    .product-item img {
+        height: 185px;
+        width: 100%;
+        margin-bottom: 10px;
+        transition: all 0.3s ease-in;
+        cursor: pointer;
+    }
+
+    .product-item img:hover {
+        transform: translateY(-10px);
+    }
+
+    .product-item-text h1 {
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .product-item-text {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .product-item button {
+        margin-top: 12px;
+        padding: 10px 12px;
+        font-size: 13px;
+        cursor: pointer;
+        border-radius: 8px;
+        background-color: #e46d6d;
+        transition: all 0.4s ease-in;
+    }
+
+    .product-item button:hover {
+        background-color: #f6a951;
+    }
+
+    /* -----------------cart----------------- */
+    .cart {
+        width: 40%;
+        margin: auto;
+        text-align: center;
+        padding-top: 30px;
+    }
+
+    .cart h2 {
+        margin-bottom: 30px;
+        font-size: 37px;
+        font-weight: lighter;
+    }
+
+    .cart table {
+        width: 100%;
+    }
+
+    .cart table thead tr th:first-child {
+        text-align: left;
+    }
+
+    .cart table thead tr th:last-child {
+        text-align: right;
+    }
+
+    .cart table tbody tr td:last-child {
+        text-align: right;
+    }
+
+    .cart table tr td {
+        border-bottom: 1px solid #ddd;
+        padding: 12px 0px;
+    }
+
+    /* cart sau khi xử lý */
+    .cart {
+        position: fixed;
+        height: 100%;
+        width: 450px;
+        top: 0;
+        right: 0;
+        background: linear-gradient(135deg,
+                #d161ff, #ecd252);
+        padding: 12px 20px;
+        overflow-y: scroll;
+        z-index: 1;
+    }
+
+    .cart button {
+        margin-top: 12px;
+        padding: 10px 20px;
+        font-size: 13px;
+        cursor: pointer;
+        border-radius: 8px;
+        background: linear-gradient(135deg,
+                #f94343, #fdfd62);
+    }
+
+    .cart button:hover {
+        background: linear-gradient(135deg,
+                #edff61, #f34444);
+    }
+
+    .cart .close-btn {
+        position: fixed;
+        padding: 20px;
+        font-size: 20px;
+        cursor: pointer;
+        font-weight: bolder;
+        right: 0;
+        bottom: 92%;
+    }
+
+    .cart-show {
+        padding: 30px 0px;
+        text-align: center;
+    }
+
+    .cart-show .bi {
+        font-size: 20px;
+    }
+
+    .cart-show button {
+        margin-top: 12px;
+        padding: 10px 20px;
+        font-size: 13px;
+        cursor: pointer;
+        border-radius: 8px;
+        background: linear-gradient(135deg,
+                #f94343, #fdfd62);
+    }
+
+    .cart-show button:hover {
+        background: linear-gradient(135deg,
+                #edff61, #f34444);
+    }
+
+    /* Đổi màu thanh trượt */
+    ::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #fd660e;
+    }
+
+    /* Đổi kích thước và kiểu đỉnh của thanh trượt */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #db7134;
+        border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: #db7134;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .Notification {
+        position: fixed;
+        bottom: 5%;
+        right: 0%;
+        background-color: #f4ea62;
+        height: 30px;
+        width: 305px;
+        color: red;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        display: none;
+        transition: opacity 1s ease-in-out;
+        opacity: 1;
+        /* text-align: center; */
+    }
+
+    .Notification.fade-out {
+        opacity: 0;
+    }
+</style>
+
+<body>
+    <section class="product">
+        <div class="container">
+            <div class="product-items">
+                <div class="product-item">
+                    <img src="img/1.webp" alt="">
+                    <div class="product-item-text">
+                        <p><span>15.320.000</span><sup>đ</sup></p>
+                        <h1>Iphone 9</h1>
+                    </div>
+                    <button>Thêm vào giỏ hàng</button>
+                </div>
+                <div class="product-item">
+                    <img src="img/2.webp" alt="">
+                    <div class="product-item-text">
+                        <p><span>18.390.000</span><sup>đ</sup></p>
+                        <h1>Iphone 8</h1>
+                    </div>
+                    <button>Thêm vào giỏ hàng</button>
+                </div>
+                <div class="product-item">
+                    <img src="img/3.webp" alt="">
+                    <div class="product-item-text">
+                        <p><span>20.120.000</span><sup>đ</sup></p>
+                        <h1>Iphone 5</h1>
+                    </div>
+                    <button>Thêm vào giỏ hàng</button>
+                </div>
+                <div class="product-item">
+                    <img src="img/4.webp" alt="">
+                    <div class="product-item-text">
+                        <p><span>30.380.000</span><sup>đ</sup></p>
+                        <h1>Iphone 6</h1>
+                    </div>
+                    <button>Thêm vào giỏ hàng</button>
+                </div>
+                <div class="product-item">
+                    <img src="img/5.webp" alt="">
+                    <div class="product-item-text">
+                        <p><span>10.329.000</span><sup>đ</sup></p>
+                        <h1>Iphone 7</h1>
+                    </div>
+                    <button>Thêm vào giỏ hàng</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- style="display: none;" -->
+    <nav style="display: none;" class="cart">
+        <div class="close-btn"><i class="bi bi-x-lg"></i></div>
+        <h2>Cart</h2>
+        <form class="form" style="display: none;" action="">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sản Phẩm:</th>
+                        <th>Giá:</th>
+                        <th>Số lượng:</th>
+                        <th>Chọn:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- <tr>
+                        <td style="display: flex; align-items: center;"><img style="width: 70px;" src="img/1.webp"
+                                alt="">Iphone 6</td>
+                        <td><span>320.000</span><sup>đ</sup></td>
+                        <td><input style="width: 40px; outline: none; font-size: 18px;" type="number" value="1" min="1">
+                        </td>
+                        <td style="cursor: pointer;font-size: 20px;"><i class="bi bi-trash3-fill"></i></td>
+                    </tr> -->
+                    <!-- <tr>
+                        <td style="display: flex; align-items: center;"><img style="width: 70px;" src="img/3.webp"
+                                alt="">Iphone 6</td>
+                        <td><span>320.000</span><sup>đ</sup></td>
+                        <td><input style="width: 40px; outline: none; font-size: 18px;" type="number" value="1" min="1">
+                        </td>
+                        <td style="cursor: pointer; font-size: 20px;"><i class="bi bi-trash3-fill"></i></td>
+                    </tr> -->
+                </tbody>
+            </table>
+            <div style="display: none;" class="price-total">
+                <p style="font-weight: bold; font-size: 19px; text-align: right;">Tổng Tiền:
+                    <span>0</span><sup>đ</sup>
+                </p>
+            </div>
+            <button class="finish">Chốt Đơn</button>
+        </form>
+    </nav>
+    <!-- style="display: none;" -->
+    <div style="display: none;" class="overlay"></div>
+    <div class="Notification">Sản Phẩm Đã được thêm vào giỏ hàng</div>
+    <div class="cart-show container">
+        <button>Xem Giỏ Hàng Của Bạn: <span>0</span><sup>đ </sup><i class="bi bi-cart4"></i></button>
+    </div>
+</body>
+<script src="giohang.js"></script>
+
+</html>
